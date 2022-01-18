@@ -45,11 +45,11 @@ class FileController extends AbstractController {
         foreach ($objects['Contents'] as $obj) {
             $cmd = $client->getCommand('GetObject', [
                 'Bucket' => 'niwa',
-                'Key'    => $obj['Key']
+                'Key' => $obj['Key']
             ]);
 
             $request = $client->createPresignedRequest($cmd, '+25 minutes');
-            $presignedUrl = (string) $request->getUri();
+            $presignedUrl = (string)$request->getUri();
 
             $obj['url'] = $presignedUrl;
             $data[] = $obj;
@@ -79,11 +79,11 @@ class FileController extends AbstractController {
 
         $cmd = $client->getCommand('GetObject', [
             'Bucket' => 'niwa',
-            'Key'    => 'Japanese mythology A to Z.pdf'
+            'Key' => 'Japanese mythology A to Z.pdf'
         ]);
 
         $request = $client->createPresignedRequest($cmd, '+25 minutes');
-        $presignedUrl = (string) $request->getUri();
+        $presignedUrl = (string)$request->getUri();
 
         $file = $presignedUrl;
 
@@ -91,19 +91,44 @@ class FileController extends AbstractController {
     }
 
     /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
+     * @param Request $request
+     * @param SerializerInterface $serializer
+     * @return Response
      */
-    #[Route('/images/count', name: 'get_count')]
-    public function getCount(SerializerInterface $serializer): Response {
-        $repository = $this->getDoctrine()->getRepository(Image::class);
-        $data = $repository
-            ->createQueryBuilder('i')
-            ->select('count(i.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
+    #[Route('/file/upload', name: 'upload_file')]
+    public function upload(Request $request, SerializerInterface $serializer): Response {
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => 'ams3',
+            'endpoint' => $_ENV['DO_ENDPOINT'],
+            'credentials' => [
+                'key' => $_ENV['DO_KEY_ACCESS'],
+                'secret' => $_ENV['DO_SECRET'],
+            ],
+            'http' => [
+                'verify' => false
+            ]
+        ]);
 
-        return new Response($data, Response::HTTP_OK);
+        $files = $request->files->get('files');
+        $data = [];
+
+        foreach($files as $f){
+            $key = str_replace('_', ' ', $f->getClientOriginalName());
+            $client->putObject([
+                'Bucket' => 'niwa',
+                'Key' => $key, //The Key (filename, it seems))
+                'Body' => $f->getContent(), //The contents of the file
+                'ACL' => 'private',
+                'Metadata' => array(
+                    'x-amz-meta-my-key' => 'your-value'
+                )
+            ]);
+            $data[] = $f;
+        }
+
+        $json = $serializer->serialize($data, 'json');
+        return new Response($json, Response::HTTP_OK);
     }
 
     #[Route('/image/file/{id}', name: 'get_raw')]
