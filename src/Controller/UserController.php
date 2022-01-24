@@ -2,35 +2,30 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
+use JMS\Serializer\SerializerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController {
 
-    #[Route('/user', name: 'user')]
-    public function index(): Response {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
-    }
-
 
     /**
+     * @param ManagerRegistry $doctrine
+     * @param SerializerInterface $serializer
      * @return Response
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    //#[Route('/login', name: 'loginUser')]
-    public function login(): Response{
-        $serializer = $this->container->get('serializer');
-        $reports = $serializer->serialize($doctrineobject, 'json');
-        return new Response($reports); // should be $reports as $doctrineobject is not serialized
+    #[Route('/users', name: 'get_users')]
+    public function getAll(ManagerRegistry $doctrine, SerializerInterface $serializer): Response{
+        $repository = $doctrine->getRepository(User::class);
+        $data = $repository->findAll();
 
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        $json = $serializer->serialize($data, 'json');
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 }

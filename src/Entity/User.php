@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="username", columns={"username"})})
+ * @ORM\Table(name="user")
  * @ORM\Entity
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -21,21 +21,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="username", type="string", length=255, nullable=true)
      */
-    private $username;
+    private ?string $username;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @ORM\Column(name="password", type="string", length=255, nullable=true)
      */
-    private $password;
+    private ?string $password;
+
+    /**
+     * @var Role
+     *
+     * @ORM\OneToOne(targetEntity="Role", fetch="EAGER")
+     * @ORM\JoinColumn(name="id_role", referencedColumnName="id")
+     */
+    private Role $role;
 
 
     public function getId(): ?int {
@@ -60,6 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
+    public function getRole(): Role{
+        return $this->role;
+    }
+
 
     /**
      * Returns the roles granted to the user.
@@ -77,7 +89,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      */
     public function getRoles(): array {
         // TODO: Implement getRoles() method.
-        return ['2'];
+        $roles = [];
+        $roles[] = $this->role;
+        return $roles;
     }
 
     /**

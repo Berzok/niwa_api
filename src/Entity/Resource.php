@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Resource
  *
- * @ORM\Table(name="resource")
+ * @ORM\Table(name="resource", indexes={@ORM\Index(name="id_folder", columns={"id_folder"})})
  * @ORM\Entity
  */
 class Resource {
@@ -21,43 +19,34 @@ class Resource {
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=72, nullable=false)
-     */
-    private $name;
+    private int $id;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
-    private $description;
+    private ?string $name;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string|null
      *
-     * @ORM\ManyToMany(targetEntity="Category", inversedBy="resource")
-     * @ORM\JoinTable(name="resource_category",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="resource_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="category_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\Column(name="filename", type="string", length=255, nullable=true)
      */
-    private $category;
+    private ?string $filename;
 
     /**
-     * Constructor
+     * @var Folder
+     *
+     * @ORM\ManyToOne(targetEntity="Folder")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_folder", referencedColumnName="id")
+     * })
      */
-    public function __construct() {
-        $this->category = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private Folder $folder;
+
+    public ?string $url = NULL;
+
 
     public function getId(): ?int {
         return $this->id;
@@ -67,40 +56,26 @@ class Resource {
         return $this->name;
     }
 
-    public function setName(string $name): self {
+    public function setName(?string $name): self {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getDescription(): ?string {
-        return $this->description;
+    public function getFilename(): ?string {
+        return $this->filename;
     }
 
-    public function setDescription(?string $description): self {
-        $this->description = $description;
-
+    public function setFilename(?string $filename): self {
+        $this->filename = $filename;
         return $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategory(): Collection {
-        return $this->category;
+    public function getFolder(): ?Folder {
+        return $this->folder;
     }
 
-    public function addCategory(Category $category): self {
-        if (!$this->category->contains($category)) {
-            $this->category[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self {
-        $this->category->removeElement($category);
-
+    public function setFolder(?Folder $folder): self {
+        $this->folder = $folder;
         return $this;
     }
 

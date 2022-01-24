@@ -67,7 +67,9 @@ class CustomAuth extends AbstractAuthenticator {
         $userData = array(
             'id' => $user->getId(),
             'username' => $user->getUserIdentifier(),
-            'role' => 2
+            'role' => $user->getRole()->getId(),
+            'creation' => $user->getRole()->getCanCreate(),
+            'deletion' => $user->getRole()->getCanDelete()
         );
         $data['userData'] = $userData;
 

@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Artist;
-use App\Entity\Image;
+use App\Entity\Folder;
+use App\Entity\Resource;
 use App\Entity\Tag;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Aws\S3\S3Client;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FileController extends AbstractController {
 
-    #[Route('/files', name: 'list_directory')]
+    #[Route('/files', name: 'list_files')]
     public function getAll(SerializerInterface $serializer): Response {
         $client = new S3Client([
             'version' => 'latest',
@@ -96,7 +94,9 @@ class FileController extends AbstractController {
      * @return Response
      */
     #[Route('/file/upload', name: 'upload_file')]
-    public function upload(Request $request, SerializerInterface $serializer): Response {
+    public function upload(Request $request, ManagerRegistry $doctrine, SerializerInterface $serializer): Response {
+        $em = $doctrine->getManager();
+
         $client = new S3Client([
             'version' => 'latest',
             'region' => 'ams3',
@@ -114,16 +114,34 @@ class FileController extends AbstractController {
         $data = [];
 
         foreach($files as $f){
-            $key = str_replace('_', ' ', $f->getClientOriginalName());
-            $client->putObject([
-                'Bucket' => 'niwa',
-                'Key' => $key, //The Key (filename, it seems))
-                'Body' => $f->getContent(), //The contents of the file
-                'ACL' => 'private',
-                'Metadata' => array(
-                    'x-amz-meta-my-key' => 'your-value'
-                )
-            ]);
+
+            try{
+                $key = str_replace('_', ' ', $f->getClientOriginalName());
+                $folder = $em->find(Folder::class, $request->get('folder'));
+
+                $resource = new Resource();
+                $resource->setFolder($folder);
+                $resource->setName($key);
+                $resource->setFilename($key);
+
+                $client->putObject([
+                    'Bucket' => $_ENV['DO_SPACE'],
+                    'Key' => $resource->getFilename(), //The Key (filename, it seems))
+                    'Body' => $f->getContent(), //The contents of the file
+                    'ACL' => 'private',
+                    'Metadata' => array(
+                        'x-amz-meta-my-key' => 'your-value'
+                    )
+                ]);
+
+                $em->persist($resource);
+                $em->flush();
+            } catch (Exception $e){
+                var_dump($e);
+            }
+            /*
+
+            */
             $data[] = $f;
         }
 

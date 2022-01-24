@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="role")
  * @ORM\Entity
  */
-class Role
-{
+class Role {
+
     /**
      * @var int
      *
@@ -19,88 +19,59 @@ class Role
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="can_create", type="integer", nullable=true)
      */
-    private $canCreate;
+    private ?int $canCreate;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="can_update", type="integer", nullable=true)
-     */
-    private $canUpdate;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="can_delete", type="integer", nullable=true)
      */
-    private $canDelete;
+    private ?int $canDelete;
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
+    public function getName(): ?string {
         return $this->name;
     }
 
-    public function setName(?string $name): self
-    {
+    public function setName(?string $name): self {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getCanCreate(): ?int
-    {
+    public function getCanCreate(): ?int {
         return $this->canCreate;
     }
 
-    public function setCanCreate(?int $canCreate): self
-    {
+    public function setCanCreate(?int $canCreate): self {
         $this->canCreate = $canCreate;
-
         return $this;
     }
 
-    public function getCanUpdate(): ?int
-    {
-        return $this->canUpdate;
-    }
-
-    public function setCanUpdate(?int $canUpdate): self
-    {
-        $this->canUpdate = $canUpdate;
-
-        return $this;
-    }
-
-    public function getCanDelete(): ?int
-    {
+    public function getCanDelete(): ?int {
         return $this->canDelete;
     }
 
-    public function setCanDelete(?int $canDelete): self
-    {
+    public function setCanDelete(?int $canDelete): self {
         $this->canDelete = $canDelete;
-
         return $this;
     }
-
 
 }
