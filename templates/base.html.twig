@@ -1,0 +1,23 @@
+{# templates/base.html.twig #}
+{# defines the common elements of all application templates, such as <head>, <header>, <footer>, etc.; #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Niwa</title>
+  {% block javascripts %}
+    <script type="application/javascript" src="{{ asset('build/app.js') }}"></script>
+  {% endblock %}
+  {% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('build/app.css') }}"/>
+  {% endblock %}
+</head>
+
+<body>
+{% block body %}
+
+{% endblock %}
+</body>
+
+</html>

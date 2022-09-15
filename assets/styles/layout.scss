@@ -1,0 +1,51 @@
+#navbar {
+  background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(93,92,58,1) 100%);
+  border-bottom: 4px double goldenrod;
+  height: 18%;
+  position: sticky;
+  width: 100%;
+}
+
+#navbar > section {
+  text-align: center;
+}
+
+#navbar > section > ul {
+  text-align: initial;
+  padding-left: 0.75rem;
+}
+
+#navbar > section > ul > li {
+  margin: 1rem 0 1rem 0;
+}
+
+#user_icon {
+  font-size: 60px;
+}
+
+#banner {
+  background: linear-gradient(180deg, #324f4f 20%, #303462 100%);
+  width: 12%;
+  border-bottom: 4px double teal;
+}
+
+#main{
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.content {
+  background-color: rgba(16, 24, 47, 0.8);
+  border: 1px solid goldenrod;
+  //width: 90%;
+}
+
+.w-60{
+  width: 65%;
+}
+
+.login-form{
+  height: 33%;
+}

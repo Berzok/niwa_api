@@ -1,0 +1,19 @@
+{# templates/index.html.twig #}
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+  <div {{ stimulus_controller('home') }} class="content container-fluid mt-4 mb-2 col-8">
+    {% include('public/partials/container.html.twig') %}
+  </div>
+
+  <div {{ stimulus_controller('home') }} class="content container-fluid mt-4 mb-2 col-4">
+    {% include('public/partials/container.html.twig') %}
+  </div>
+  <!--
+    <div class="content d-flex flex-fill ms-1">
+{#      {{ render(controller('App\\Controller\\HomeController::edit')) }} #}
+{#      {% include('public/partials/details.html.twig') %} #}
+    </div>
+    -->
+{% endblock %}

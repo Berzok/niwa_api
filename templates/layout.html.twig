@@ -1,0 +1,56 @@
+{# templates/layout.html.twig #}
+{#
+extends from base.html.twig and defines the content structure used in all or most of
+the pages, such as a two-column content + sidebar layout.
+Some sections of the application can define their own layouts (e.g. templates/blog/layout.html.twig);
+#}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="d-flex flex-column h-100">
+
+    <nav id="navbar" class="row mx-0">
+      <section class="d-flex col-2">
+        {{ include('navbar/user.html.twig') }}
+      </section>
+
+      <section class="d-flex flex-fill justify-content-around my-auto col-10">
+          <h1>
+            <span class="fa-solid fa-home col-3"></span>
+            <a href="{{ path('index') }}" class="nav-link col-auto">
+              {% trans %} menu.home {% endtrans %}
+            </a>
+          </h1>
+        <h1>
+          <span class="fa-solid fa-search col-3"></span>
+          <a href="{{ path('search_index') }}" class="nav-link col-auto">
+            {% trans %} menu.search {% endtrans %}
+          </a>
+        </h1>
+        <h1>
+          <span class="fa-solid fa-tag col-3"></span>
+          <a href="{{ path('tags') }}" class="nav-link">
+            {% trans %} menu.tags {% endtrans %}
+          </a>
+        </h1>
+        <h1>
+          <span class="fa-solid fa-diagram-project col-3"></span>
+          <a href="{{ path('tree') }}" class="nav-link">
+            {% trans %} menu.tree {% endtrans %}
+          </a>
+        </h1>
+      </section>
+    </nav>
+
+    <main id="main">
+
+      {#      <div id="banner" class="flex-fill mb-2"></div> #}
+
+      {% block content %}
+      {% endblock %}
+
+    </main>
+
+  </div>
+{% endblock %}

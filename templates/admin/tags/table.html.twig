@@ -1,0 +1,26 @@
+{# templates/index.html.twig #}
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+  <div {{ stimulus_controller('tags', {
+    'tags': tags
+  }) }} class="content container-fluid w-100 mx-5 my-2">
+
+    <div class="my-2">
+      <label for="table_tags_search" class="form-label">
+        {% trans %} form.search {% endtrans %}
+      </label>
+      <input id="table_tags_search" placeholder="Recherche..." type="text" class="form-control w-25"/>
+    </div>
+
+    <div id="table_tags">
+
+    </div>
+
+    <hr/>
+
+    {{ render(controller('App\\Controller\\AdminController::tag'))  }}
+  </div>
+
+{% endblock %}

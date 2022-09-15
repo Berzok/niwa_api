@@ -1,0 +1,18 @@
+{# templates/index.html.twig #}
+
+{{ form_start(form) }}
+{{ form_row(form.name) }}
+{{ form_row(form.description) }}
+
+<div class="mb-3">
+  <button type="submit" id="tag_save" name="tag[save]" class="btn-primary btn">
+    <span class="fa-solid fa-save"></span>
+    Enregistrer
+  </button>
+  <button type="reset" id="tag_reset" name="tag[reset]" class="btn-warning btn">
+    <span class="fa-solid fa-times"></span>
+    Annuler
+  </button>
+</div>
+
+{{ form_end(form) }}

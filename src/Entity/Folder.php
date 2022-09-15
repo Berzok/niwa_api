@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\FolderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use JetBrains\PhpStorm\Pure;
  * Folder
  *
  * @ORM\Table(name="folder", indexes={@ORM\Index(name="id_parent_folder", columns={"id_parent_folder"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=FolderRepository::class)
  */
 class Folder {
 
@@ -41,17 +42,17 @@ class Folder {
     /**
      * @var ?Folder
      *
-     * @ORM\ManyToOne(targetEntity="Folder")
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="children_folder")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_parent_folder", referencedColumnName="id")
      * })
      */
-    private ?Folder $parent_folder = NULL;
+    private ?Folder $parent = NULL;
 
     /**
-     * @var Folder|null
+     * @var ?Collection<Folder>
      *
-     * @ORM\OneToMany(targetEntity="Folder", mappedBy="parent_folder")
+     * @ORM\OneToMany(targetEntity="Folder", mappedBy="parent")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_children_folder", referencedColumnName="id")
      * })
@@ -61,7 +62,7 @@ class Folder {
     /**
      * @var Collection|null
      *
-     * @ORM\OneToMany(targetEntity="Resource", mappedBy="folder")
+     * @ORM\OneToMany(targetEntity="Resource", mappedBy="folder", fetch="EAGER")
      */
     private ?Collection $content;
 
@@ -93,12 +94,12 @@ class Folder {
         return $this;
     }
 
-    public function getParentFolder(): ?self {
-        return $this->parent_folder;
+    public function getParent(): ?self {
+        return $this->parent;
     }
 
-    public function setParentFolder(?self $parent_folder): self {
-        $this->parent_folder = $parent_folder;
+    public function setParent(?self $parent): self {
+        $this->parent = $parent;
         return $this;
     }
 
@@ -107,7 +108,7 @@ class Folder {
     }
 
     public function setChildrenFolder(?self $children_folder): self {
-        $this->parent_folder = $children_folder;
+        $this->parent = $children_folder;
         return $this;
     }
 
@@ -125,6 +126,11 @@ class Folder {
     public function setContent(Collection|null $content): Folder {
         $this->content = $content;
         return $this;
+    }
+
+    #[Pure]
+    public function __toString() {
+        return $this->getName();
     }
 
 }

@@ -1,0 +1,39 @@
+{# templates/public/item.html.twig #}
+
+{% if folder is defined %}
+  <li class="folder">
+    <section class="d-flex">
+      <a href="{{ path('index', {path: folder.name}) }}" class="folder-link">
+        <span class="fa-solid fa-folder"></span>{{ folder.name }}
+      </a>
+      <span class="mx-2">
+        ({{ render(controller('App\\Controller\\Api\\FolderController::count', {id: folder.id})) }})
+      </span>
+    </section>
+    <div class="d-flex">
+      <button class="btn border-2 border-info" title="Edit">
+        <span class="fa-solid fa-pencil text-light"></span>
+      </button>
+      <button class="btn border-2 border-danger" title="Delete">
+        <span class="fa-solid fa-trash text-light"></span>
+      </button>
+    </div>
+  </li>
+{% elseif resource is defined %}
+  <li class="resource">
+    <section class="d-flex">
+      <a href="{{ path('download', {path: resource.filename}) }}" class="" target="_blank">
+        <span class="fa-solid fa-book"></span>
+        {{ resource.name }}
+      </a>
+    </section>
+    <div class="d-flex">
+      <button class="btn border-2 border-info" data-action="click->home#toggleComment">
+        <span class="fa-solid fa-eye text-light"></span>
+      </button>
+      <button class="btn border-2 border-danger delete" data-id="{{ resource.id }}" data-action="click->home#deleteResource">
+        <span class="fa-solid fa-trash text-light"></span>
+      </button>
+    </div>
+  </li>
+{% endif %}

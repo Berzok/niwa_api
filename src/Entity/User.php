@@ -72,6 +72,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this->role;
     }
 
+    public function setRole(Role $role): self {
+        $this->role = $role;
+        return $this;
+    }
+
 
     /**
      * Returns the roles granted to the user.
@@ -90,7 +95,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function getRoles(): array {
         // TODO: Implement getRoles() method.
         $roles = [];
-        $roles[] = $this->role;
+        //$roles[] = $this->role;
+        $roles[] = 'ROLE_ADMIN';
         return $roles;
     }
 
@@ -103,8 +109,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      *
      * @return string|null The salt
      */
-    public function getSalt() {
-        // TODO: Implement getSalt() method.
+    public function getSalt(): ?string {
+        return null;
     }
 
     /**

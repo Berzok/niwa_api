@@ -1,0 +1,7 @@
+$backgroundColour: #10182f !default;
+
+@import "tabulator-tables/src/scss/tabulator.scss";
+
+.tabulator{
+  background-color: $backgroundColour;
+}

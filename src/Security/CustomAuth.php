@@ -2,43 +2,55 @@
 // src/Security/ApiKeyAuthenticator.php
 namespace App\Security;
 
+use App\Entity\User;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
-class CustomAuth extends AbstractAuthenticator {
+class CustomAuth extends AbstractLoginFormAuthenticator {
 
     /**
      * Called on every request to decide if this authenticator should be
      * used for the request. Returning `false` will cause this authenticator
      * to be skipped.
+     * @param Request $request
+     * @return bool
      */
-    public function supports(Request $request): ?bool {
-        return ($request->getPathInfo() === '/login' && $request->isMethod('POST'));
+    public function supports(Request $request): bool {
+        return false;
+        //return ($request->getPathInfo() === '/login' && $request->isMethod('POST'));
     }
 
+    /**
+     * @param Request $request
+     * @return Passport
+     */
     public function authenticate(Request $request): Passport {
         $form = $request->toArray();
         $login = $form['username'];
         $password = $form['password'];
 
-        $passport = new Passport(
+        return new Passport(
             new UserBadge($login),
             new PasswordCredentials($password)
         );
-
-        return $passport;
     }
 
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response {
+    /**
+     * @inheritDoc
+     * @param Request $request
+     * @param AuthenticationException $exception
+     * @return Response
+     */
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response {
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
         return new Response($exception->getMessage(), Response::HTTP_UNAUTHORIZED);
@@ -55,6 +67,7 @@ class CustomAuth extends AbstractAuthenticator {
      * @throws Exception
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response {
+        /** @var User $user */
         $user = $token->getUser();
 
         // TODO:
@@ -62,7 +75,7 @@ class CustomAuth extends AbstractAuthenticator {
         $data = array(
             'status' => 1,
             'token' => password_hash($user->getPassword(), PASSWORD_BCRYPT)
-//            'token' => bin2hex(random_bytes(16))
+            //            'token' => bin2hex(random_bytes(16))
         );
         $userData = array(
             'id' => $user->getId(),
@@ -75,6 +88,11 @@ class CustomAuth extends AbstractAuthenticator {
 
         return new Response(json_encode($data), Response::HTTP_OK, ['content-type' => 'application/json']);
     }
-}
 
-?>
+    /**
+     * Return the URL to the login page.
+     */
+    protected function getLoginUrl(Request $request): string {
+        return '/login';
+    }
+}

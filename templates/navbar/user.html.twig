@@ -1,0 +1,15 @@
+{% block user %}
+  <div class="border rounded-1 flex-fill">
+    <span id="user_icon" class="fa-solid fa-user my-2"></span>
+    <hr class="my-0"/>
+    <h5>
+      <a href="{{ path('profile') }}" class="">
+        {{ app.user.username }}
+      </a>
+    </h5>
+    <a href="{{ path('logout') }}" class="btn btn-danger">
+      <span class="fa-solid fa-close"></span>
+      {% trans %} user.logout {% endtrans %}
+    </a>
+  </div>
+{% endblock %}

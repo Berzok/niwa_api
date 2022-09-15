@@ -1,0 +1,16 @@
+menu:
+  home: Accueil
+  search: Recherche
+  tags: Tags
+  tree: Graphe
+
+form:
+  name: Nom
+  submit: Enregistrer
+  tags: Tags
+  upload: Fichier
+
+user:
+  # id is user.login
+  login: Connexion
+  logout: Déconnexion

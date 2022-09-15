@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Resource
@@ -38,14 +41,32 @@ class Resource {
     /**
      * @var Folder
      *
-     * @ORM\ManyToOne(targetEntity="Folder")
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="content")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_folder", referencedColumnName="id")
      * })
      */
     private Folder $folder;
 
+    /**
+     * @var Collection
+     *
+     * Many Resources have Many Tags.
+     * @ORM\ManyToMany(targetEntity="Tag")
+     * @ORM\JoinTable(name="resource_tag",
+     *      joinColumns={@ORM\JoinColumn(name="id_resource", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="id_tag", referencedColumnName="id")}
+     * )
+     */
+    private Collection $tags;
+
     public ?string $url = NULL;
+
+
+    #[Pure]
+    public function __construct() {
+        $this->tags = new ArrayCollection();
+    }
 
 
     public function getId(): ?int {
@@ -79,4 +100,35 @@ class Resource {
         return $this;
     }
 
+    /**
+     * @return Collection
+     */
+    public function getTags(): Collection {
+        return $this->tags;
+    }
+
+    /**
+     * @param Collection $tags
+     * @return Resource
+     */
+    public function setTags(Collection $tags): Resource {
+        $this->tags = $tags;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUrl(): ?string {
+        return $this->url;
+    }
+
+    /**
+     * @param string|null $url
+     * @return Resource
+     */
+    public function setUrl(?string $url): Resource {
+        $this->url = $url;
+        return $this;
+    }
 }

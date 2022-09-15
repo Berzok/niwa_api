@@ -1,0 +1,18 @@
+menu:
+  home: Home
+  search: Search
+  tags: Tags
+  tree: Tree
+
+form:
+  description: Description
+  name: Name
+  search: Search
+  submit: Save
+  tags: Tags
+  upload: File
+
+user:
+  # id is user.login
+  login: Login
+  logout: Logout

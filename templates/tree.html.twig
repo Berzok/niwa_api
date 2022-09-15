@@ -1,0 +1,11 @@
+{# templates/index.html.twig #}
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+  <div {{ stimulus_controller('tree', {
+    'items': data
+  }) }} class="d-flex flex-fill">
+    <div id="tree-simple"></div>
+    <div id="myOverviewDiv"></div>
+  </div>
+{% endblock %}

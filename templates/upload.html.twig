@@ -1,0 +1,15 @@
+{# templates/index.html.twig #}
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+  <div class="modal-content bg-secondary">
+
+    <div data-controller="upload">
+    </div>
+
+    {{ form_start(form) }}
+    {{ form_row(form.file) }}
+    {{ form_end(form) }}
+
+  </div>
+{% endblock %}

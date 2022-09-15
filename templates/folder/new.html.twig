@@ -1,0 +1,15 @@
+{# templates/folder/new.html.twig #}
+
+<div class="modal-content">
+
+  <div class="modal-header bg-secondary border-0">
+    <h5 class="modal-title">New folder</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="container-fluid bg-secondary">
+    {{ form_start(form) }}
+    <input type="hidden" name="path" value="{{ current_path }}">
+    {{ form_row(form.name) }}
+    {{ form_end(form) }}
+  </div>
+</div>

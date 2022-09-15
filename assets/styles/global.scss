@@ -1,0 +1,28 @@
+@import "~bootstrap/scss/bootstrap";
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
+
+html {
+  scrollbar-color: #6640ce grey;
+  scrollbar-width: thin;
+}
+
+body {
+  background-image: url("~/assets/images/sakura-1080.jpg");
+  background-color: #454549;
+  color: #c5d7f2;
+  height: 100vh;
+}
+
+a {
+  color: cornflowerblue;
+}
+
+hr {
+  background-color: antiquewhite;
+  color: antiquewhite;
+}
+
+.list-style-none {
+  list-style: none;
+}

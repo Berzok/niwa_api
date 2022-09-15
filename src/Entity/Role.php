@@ -24,7 +24,7 @@ class Role {
     /**
      * @var string|null
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private ?string $name;
 
@@ -34,7 +34,6 @@ class Role {
      * @ORM\Column(name="can_create", type="integer", nullable=true)
      */
     private ?int $canCreate;
-
 
     /**
      * @var int|null

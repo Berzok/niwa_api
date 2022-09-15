@@ -1,0 +1,52 @@
+{# templates/index.html.twig #}
+
+<div class="d-flex align-items-center justify-content-between my-2">
+  <div>
+    <label for="search_input" class="form-label">
+      {% trans %} form.search {% endtrans %}
+    </label>
+    <input id="search_input" type="text" class="form-control">
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#folderCreate">
+      <span class="fa-solid fa-folder-plus"></span>
+      Create new folder
+    </button>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resourceCreate">
+      <span class="fa-solid fa-upload"></span>
+      Upload
+    </button>
+  </div>
+</div>
+
+<div>
+  <div id="resourceCreate" class="modal fade">
+    <div class="modal-dialog">
+      {{ render(controller('App\\Controller\\UploadController::upload', {path: current_path})) }}
+    </div>
+  </div>
+  <div id="folderCreate" class="modal fade">
+    <div class="modal-dialog">
+      {{ render(controller('App\\Controller\\Api\\FolderController::new', {path: current_path})) }}
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<ul class="list-style-none ps-0">
+  <li>
+    <a href="{{ path('index', {path: previous_path}) }}" class="w-50">
+      <span class="fa-solid fa-folder"></span>
+      ..
+    </a>
+  </li>
+  {% for folder in folders %}
+    {% include('public/partials/item.html.twig') %}
+  {% endfor %}
+  {% for resource in resources %}
+    {% include('public/partials/item.html.twig') %}
+  {% endfor %}
+</ul>
